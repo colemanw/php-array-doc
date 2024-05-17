@@ -3,11 +3,21 @@ namespace PhpArrayDocument;
 
 class PhpArrayDocument {
 
-  public array $use = [];
+  /**
+   * @var array
+   *   Ex: ['ClassAlias' => 'Full\Class\Name']
+   */
+  public $use = [];
 
-  public array $dataComments = [];
+  /**
+   * @var array
+   */
+  public $dataComments = [];
 
-  public ?ValueNode $data = NULL;
+  /**
+   * @var \PhpArrayDocument\ValueNode|null
+   */
+  public $root = NULL;
 
   /**
    * Find expressions like "E::ts()" and turn them into "CRM_Foo_ExtensionInfo::ts()".
@@ -15,7 +25,7 @@ class PhpArrayDocument {
    * @return $this
    */
   public function dereferenceClassAliases() {
-    foreach ($this->data->walkNodes(ScalarValueNode::class) as $node) {
+    foreach ($this->root->walkNodes(ScalarValueNode::class) as $node) {
       if (!empty($node->factory)) {
         $parts = explode('::', $node->factory, 2);
         if (count($parts) === 2 && isset($this->use[$parts[0]])) {
@@ -32,7 +42,7 @@ class PhpArrayDocument {
    * @return $this
    */
   public function useClassAliases() {
-    foreach ($this->data->walkNodes(ScalarValueNode::class) as $node) {
+    foreach ($this->root->walkNodes(ScalarValueNode::class) as $node) {
       if (!empty($node->factory)) {
         $parts = explode('::', $node->factory, 2);
         if (count($parts) === 2) {

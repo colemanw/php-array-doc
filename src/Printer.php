@@ -26,7 +26,7 @@ class Printer {
       $buf[] = '';
       $buf[] = rtrim(implode("", $document->dataComments), "\n");
     }
-    $buf[] = 'return ' . $this->printNode($document->data) . ";\n";
+    $buf[] = 'return ' . $this->printNode($document->root) . ";\n";
     return implode("\n", $buf);
   }
 

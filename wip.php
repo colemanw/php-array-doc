@@ -46,8 +46,8 @@ $document = $parser->parse($code);
 // $document->dereferenceClassAliases();
 print_r($document);
 print_r([
-  'value of label is' => $document->data['label'],
-  'value of html.bold is' => $document->data['html']['bold'],
+  'value of label is' => $document->root['label'],
+  'value of html.bold is' => $document->root['html']['bold'],
 ]);
 
 echo "\n";
