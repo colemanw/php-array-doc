@@ -3,9 +3,18 @@ namespace PhpArrayDocument;
 
 abstract class ValueNode {
 
-  public ?string $factory = NULL;
+  /**
+   * @var string|null
+   *   Ex: 'ts' or 'E::ts' or 'Some\Class\Name::ts'
+   */
+  public $factory = NULL;
 
-  public bool $deferred = FALSE;
+  /**
+   * Does this data use deferred construction (`fn() => [...data..]`)?
+   *
+   * @var bool
+   */
+  public $deferred = FALSE;
 
   /**
    * @template T of ValueNode

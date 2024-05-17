@@ -3,11 +3,17 @@ namespace PhpArrayDocument;
 
 class ArrayItem {
 
-  public ?string $comment = NULL;
+  /**
+   * @var string|null
+   */
+  public $comment = NULL;
 
   public $key;
 
-  public ValueNode $value;
+  /**
+   * @var \PhpArrayDocument\ValueNode
+   */
+  public $value;
 
   public function __construct($key, ValueNode $value) {
     $this->key = $key;
