@@ -3,13 +3,28 @@
 namespace PhpArrayDocument;
 
 if (!defined('T_FN')) {
-  define('T_FN', '_polyfill_tn');
+  define('T_FN', '_polyfill_T_FN');
 }
 
 class Tokenizer {
 
   public static function getTokens(string $content): array {
     return array_map([__CLASS__, 'normalizeToken'], token_get_all($content));
+  }
+
+  /**
+   * @param int|string|array $token
+   * @return string
+   */
+  public static function getName($token): string {
+    $id = is_array($token) ? $token[0] : $token;
+    if (is_string($id) && strlen($id) === 1) {
+      return $id;
+    }
+    if (is_string($id) && strpos($id, '_polyfill_') === 0) {
+      return substr($id, strlen('_polyfill_'));
+    }
+    return token_name($id);
   }
 
   /**

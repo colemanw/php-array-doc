@@ -259,7 +259,7 @@ class Parser {
 
   private function nextToken() {
     $this->currentToken = $this->tokens[$this->pos++] ?? [NULL, NULL];
-    $this->currentTokenId = is_string($this->currentToken) ? $this->currentToken : token_name($this->currentToken[0]);
+    $this->currentTokenId = Tokenizer::getName($this->currentToken[0]);
     return $this;
   }
 
@@ -293,7 +293,7 @@ class Parser {
   private function unexpectedToken() {
     $token = $this->currentToken;
     if (is_array($token)) {
-      $token[0] = token_name($token[0]);
+      $token[0] = Tokenizer::getName($token);
     }
     throw new ParseException('Unexpected token: ' . json_encode($token));
   }
