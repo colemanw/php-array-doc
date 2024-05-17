@@ -292,6 +292,10 @@ class Parser {
 
   private function unexpectedToken() {
     $token = $this->currentToken;
+    if ($token === [NULL, NULL]) {
+      throw new ParseException('Unexpected end of content');
+    }
+
     if (is_array($token)) {
       $token[0] = Tokenizer::getName($token);
     }
