@@ -1,10 +1,6 @@
 <?php
 namespace PhpArrayDocument;
 
-if (!defined('T_FN')) {
-  define('T_FN', '_polyfill_tn');
-}
-
 class Parser {
 
   private $tokens;
@@ -21,16 +17,7 @@ class Parser {
   private $currentTokenId;
 
   public function parse($code) {
-    $this->tokens = token_get_all($code);
-    $this->tokens = array_map(function ($token) {
-      if (!is_array($token)) {
-        // ok
-      }
-      elseif ($token[0] === T_STRING && $token[1] === 'fn') {
-        $token[0] = T_FN;
-      }
-      return $token;
-    }, $this->tokens);
+    $this->tokens = Tokenizer::getTokens($code);
     $this->pos = 0;
     $this->nextToken();
     return $this->parseDocument();
