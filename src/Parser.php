@@ -78,10 +78,10 @@ class Parser {
 
   private function parseValue() {
     if ($this->isScalar($this->currentToken)) {
-      return new ScalarValueNode($this->parseScalar());
+      return new ScalarNode($this->parseScalar());
     }
     elseif ($this->isArray($this->currentToken)) {
-      return new ArrayValueNode($this->parseArrayItems());
+      return new ArrayNode($this->parseArrayItems());
     }
     elseif ($this->isToken(T_FN)) {
       $this->expectSequence([T_FN, "(", ")", T_DOUBLE_ARROW]);
@@ -163,7 +163,7 @@ class Parser {
       }
       else {
         $key = NULL;
-        $value = new ScalarValueNode($first);
+        $value = new ScalarNode($first);
       }
     }
     else {
@@ -172,7 +172,7 @@ class Parser {
     }
     $this->skipWhitespace();
 
-    $item = new ArrayItem($key, $value);
+    $item = new ArrayItemNode($key, $value);
     if (!empty($comments)) {
       $item->comment = implode("", $comments);
     }

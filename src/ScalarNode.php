@@ -1,12 +1,15 @@
 <?php
 namespace PhpArrayDocument;
 
-class ScalarValueNode extends ValueNode {
+class ScalarNode extends BaseNode {
 
+  /**
+   * @var scalar
+   */
   public $scalar;
 
   /**
-   * @param $scalar
+   * @param scalar $scalar
    */
   public function __construct($scalar) {
     $this->scalar = $scalar;

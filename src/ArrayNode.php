@@ -1,10 +1,10 @@
 <?php
 namespace PhpArrayDocument;
 
-class ArrayValueNode extends ValueNode implements \ArrayAccess, \IteratorAggregate, \Countable {
+class ArrayNode extends BaseNode implements \ArrayAccess, \IteratorAggregate, \Countable {
 
   /**
-   * @var ArrayItem[]
+   * @var ArrayItemNode[]
    */
   public $items = [];
 
@@ -12,10 +12,10 @@ class ArrayValueNode extends ValueNode implements \ArrayAccess, \IteratorAggrega
     $this->items = $items;
   }
 
-  public function walkNodes(string $type = ValueNode::class) {
+  public function walkNodes(string $type = BaseNode::class) {
     yield from parent::walkNodes($type);
     foreach ($this->items as $arrayItem) {
-      yield from $arrayItem->value->walkNodes($type);
+      yield from $arrayItem->walkNodes($type);
     }
   }
 
@@ -39,7 +39,7 @@ class ArrayValueNode extends ValueNode implements \ArrayAccess, \IteratorAggrega
   }
 
   public function offsetSet($offset, $value) {
-    if (!($value instanceof ValueNode)) {
+    if (!($value instanceof BaseNode)) {
       $type = gettype($value);
       if ($type === 'object') {
         $type = get_class($value);

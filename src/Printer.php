@@ -30,7 +30,7 @@ class Printer {
     return implode("\n", $buf);
   }
 
-  private function printNode(ValueNode $node, int $indent = 0): string {
+  private function printNode(BaseNode $node, int $indent = 0): string {
     $prefix = $suffix = '';
     if ($node->factory) {
       $prefix .= $node->factory . '(';
@@ -46,15 +46,15 @@ class Printer {
       }
     }
 
-    if ($node instanceof ScalarValueNode) {
+    if ($node instanceof ScalarNode) {
       $constants = [FALSE => 'FALSE', TRUE => 'TRUE', NULL => 'NULL'];
       $value = $constants[$node->scalar] ?? var_export($node->scalar, TRUE);
       return $prefix . $value . $suffix;
     }
-    elseif ($node instanceof ArrayValueNode) {
+    elseif ($node instanceof ArrayNode) {
       $isSeq = array_keys($node->items) === range(0, count($node->items) - 1);
       $isShort = array_reduce($node->items, function ($carry, $item) {
-        return $carry && ($item->value instanceof ScalarValueNode) && empty($item->comment) && strlen($item->value->scalar) < 15;
+        return $carry && ($item->value instanceof ScalarNode) && empty($item->comment) && strlen($item->value->scalar) < 15;
       }, count($node->items) < 5);
 
       $parts = [];

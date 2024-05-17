@@ -1,7 +1,7 @@
 <?php
 namespace PhpArrayDocument;
 
-abstract class ValueNode {
+abstract class BaseNode {
 
   /**
    * @var string|null
@@ -17,11 +17,11 @@ abstract class ValueNode {
   public $deferred = FALSE;
 
   /**
-   * @template T of ValueNode
+   * @template T of BaseNode
    * @param class-string<T> $type
    * @return Generator<T>
    */
-  public function walkNodes(string $type = ValueNode::class) {
+  public function walkNodes(string $type = BaseNode::class) {
     if ($type === NULL || $this instanceof $type) {
       yield $this;
     }
