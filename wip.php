@@ -44,6 +44,9 @@ CODE;
 $parser = new Parser();
 $document = $parser->parse($code);
 // $document->dereferenceClassAliases();
+// $document->root['active'] = new ScalarNode('yabba');
+// $document->root->getItem('active')->key = 'enabled';
+
 print_r($document);
 print_r([
   'value of label is' => $document->root['label'],

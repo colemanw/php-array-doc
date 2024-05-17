@@ -52,7 +52,7 @@ class Printer {
       return $prefix . $value . $suffix;
     }
     elseif ($node instanceof ArrayNode) {
-      $isSeq = array_keys($node->items) === range(0, count($node->items) - 1);
+      $isSeq = array_column($node->items, 'key') === range(0, count($node->items) - 1);
       $isShort = array_reduce($node->items, function ($carry, $item) {
         return $carry && ($item->value instanceof ScalarNode) && empty($item->comment) && strlen($item->value->scalar) < 15;
       }, count($node->items) < 5);

@@ -1,6 +1,15 @@
 <?php
 namespace PhpArrayDocument;
 
+/**
+ * A PHP array. There are a few ways to access its children:
+ *
+ * - $array[$key]: Short-hand to read/write the value of an item.
+ * - $array->getItem($key): Returns the metadata (ArrayItem),
+ *     which includes the key, docblocks, and value.
+ * - $array->walkNodes(): Recursively the subtree
+ *
+ */
 class ArrayNode extends BaseNode implements \ArrayAccess, \IteratorAggregate, \Countable {
 
   /**
@@ -19,6 +28,24 @@ class ArrayNode extends BaseNode implements \ArrayAccess, \IteratorAggregate, \C
     }
   }
 
+  public function getItem($key): ?ArrayItemNode {
+    foreach ($this->items as $arrayItem) {
+      if ($arrayItem->key == $key) {
+        return $arrayItem;
+      }
+    }
+    return NULL;
+  }
+
+  public function getItemPosition($key) {
+    foreach ($this->items as $arrayItem) {
+      if ($arrayItem->key == $key) {
+        return $arrayItem;
+      }
+    }
+    return NULL;
+  }
+
   public function getIterator() {
     return new \ArrayIterator($this->items);
   }
@@ -28,29 +55,35 @@ class ArrayNode extends BaseNode implements \ArrayAccess, \IteratorAggregate, \C
   }
 
   public function offsetExists($offset) {
-    return isset($this->items[$offset]);
+    return $this->getItem($offset) !== NULL;
   }
 
   public function offsetGet($offset) {
-    if (!isset($this->items[$offset])) {
-      return NULL;
-    }
-    return $this->items[$offset]->value;
+    $item = $this->getItem($offset);
+    return $item ? $item->value : NULL;
   }
 
   public function offsetSet($offset, $value) {
-    if (!($value instanceof BaseNode)) {
+    if (!($value instanceof ScalarNode || $value instanceof ArrayNode)) {
       $type = gettype($value);
       if ($type === 'object') {
         $type = get_class($value);
       }
       throw new \RuntimeException(sprintf("Cannot add object (%s) to ArrayValueNode", $type));
     }
-    $this->items[$offset]->value = $value;
+    if ($item = $this->getItem($offset)) {
+      $item->value = $value;
+    }
+    else {
+      $this->items[] = new ArrayItemNode($offset, $value);
+    }
   }
 
   public function offsetUnset($offset) {
-    unset($this->items[$offset]);
+    $pos = $this->getItemPosition($offset);
+    if ($pos !== NULL) {
+      unset($this->items[$pos]);
+    }
   }
 
 }

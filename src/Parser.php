@@ -129,7 +129,7 @@ class Parser {
       if ($arrayItem->key === NULL) {
         $arrayItem->key = $num++;
       }
-      $result[$arrayItem->key] = $arrayItem;
+      $result[] = $arrayItem;
       $this->skipWhitespace();
 
       if ($this->isToken(',')) {
