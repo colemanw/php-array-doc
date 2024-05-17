@@ -102,7 +102,7 @@ class Parser {
       $result = $this->parseValue();
       $this->expect(')')->skipWhitespace();
       if ($result->factory !== NULL) {
-        throw new \Exception('Cannot use multiple factories: ' . json_encode([$result->factory, $factory]));
+        throw new ParseException('Cannot use multiple factories: ' . json_encode([$result->factory, $factory]));
       }
       $result->factory = $factory;
       return $result;
@@ -295,7 +295,7 @@ class Parser {
     if (is_array($token)) {
       $token[0] = token_name($token[0]);
     }
-    throw new \Exception('Unexpected token: ' . json_encode($token));
+    throw new ParseException('Unexpected token: ' . json_encode($token));
   }
 
 }
