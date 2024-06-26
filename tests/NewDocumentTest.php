@@ -58,6 +58,8 @@ class NewDocumentTest extends \PHPUnit\Framework\TestCase {
         'null' => NULL,
         'true' => TRUE,
         'false' => FALSE,
+        'float' => 12.3,
+        'stringNum' => '45.6',
         'alskjdf asdf' => 123,
       ],
     ];
