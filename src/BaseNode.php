@@ -68,6 +68,26 @@ abstract class BaseNode {
   }
 
   /**
+   * Set the clean version of the comment. (Comment markers will be added automatically.)
+   *
+   * @param string|null $comment
+   */
+  public function setCleanComment(?string $comment): void {
+    if ($comment === NULL) {
+      $this->comment = [];
+      return;
+    }
+
+    $buf = "/**\n";
+    $lines = explode("\n", rtrim($comment, "\n"));
+    foreach ($lines as $line) {
+      $buf .= ' * ' . $line . "\n";
+    }
+    $buf .= " */\n";
+    $this->comment = [$buf];
+  }
+
+  /**
    * Get the raw comment code, including the comment markers.
    *
    * @param string $prefix
@@ -84,9 +104,7 @@ abstract class BaseNode {
         $buf .= $prefix . $comment;
       }
       elseif (substr($comment, 0, 3) === '/**') {
-        // $buf .= $prefix . $comment;
-        $myIndent = substr($prefix, 2);
-        $buf .= $prefix . rtrim(str_replace("\n", "\n$myIndent", $comment), " ");
+        $buf .= $prefix . rtrim(str_replace("\n", "\n{$prefix}", $comment), " ");
       }
       elseif (substr($comment, 0, 2) === '/*') {
         $buf .= $prefix . $comment;

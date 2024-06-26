@@ -308,6 +308,9 @@ class Parser {
     $comments = [];
     while ($this->isToken([T_COMMENT, T_DOC_COMMENT, T_WHITESPACE])) {
       $comment = ltrim($this->currentToken[1], ' \t');
+      if ($this->isToken(T_DOC_COMMENT) && substr($comment, 0, 3) === '/**') {
+        $comment = preg_replace("/^[ \t]+\*/m", ' *', $comment);
+      }
       $this->nextToken();
       if ($this->isToken(T_WHITESPACE)) {
         $comment .= rtrim($this->currentToken[1], " ");
