@@ -194,6 +194,7 @@ class Parser {
     }
     elseif ($this->isToken(T_CONSTANT_ENCAPSED_STRING)) {
       $result = substr($this->currentToken[1], 1, -1);
+      $result = stripslashes($result);
       $this->nextToken()->skipWhitespace();
     }
     elseif ($this->isToken(T_STRING)) {

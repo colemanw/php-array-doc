@@ -24,5 +24,6 @@ return [
     'float-ish' => '45.6',
     'int' => 123,
     'int-ish' => '123',
+    'fun\\ny \'b"u`siness' => 'a\\b\'c"d`e',
   ]; },
 ];
