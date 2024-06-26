@@ -29,4 +29,36 @@ abstract class BaseNode {
     }
   }
 
+  /**
+   * @return string|null
+   */
+  public function getFactory(): ?string {
+    return $this->factory;
+  }
+
+  /**
+   * @param string|null $factory
+   * @return $this
+   */
+  public function setFactory(?string $factory) {
+    $this->factory = $factory;
+    return $this;
+  }
+
+  /**
+   * @return bool
+   */
+  public function isDeferred(): bool {
+    return $this->deferred;
+  }
+
+  /**
+   * @param bool $deferred
+   * @return $this
+   */
+  public function setDeferred(bool $deferred) {
+    $this->deferred = $deferred;
+    return $this;
+  }
+
 }

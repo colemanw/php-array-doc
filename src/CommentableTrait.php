@@ -10,6 +10,15 @@ trait CommentableTrait {
    */
   public $comments = NULL;
 
+  public function getOuterComments(): ?array {
+    return $this->comments;
+  }
+
+  public function setOuterComments(?array $comments) {
+    $this->comments = $comments;
+    return $this;
+  }
+
   /**
    * Get a clean version of the comment, without any comment-markers.
    *

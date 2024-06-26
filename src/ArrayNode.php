@@ -21,6 +21,10 @@ class ArrayNode extends BaseNode implements \ArrayAccess, \IteratorAggregate, \C
     $this->items = $items;
   }
 
+  public function create($items = []): ArrayNode {
+    return new static($items);
+  }
+
   public function walkNodes(string $type = BaseNode::class) {
     yield from parent::walkNodes($type);
     foreach ($this->items as $arrayItem) {
