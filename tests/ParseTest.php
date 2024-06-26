@@ -34,7 +34,7 @@ class ParseTest extends \PHPUnit\Framework\TestCase {
 
   protected function assertScalarNode($node, $value, bool $deferred, ?string $factory, ?string $cleanComment) {
     $this->assertInstanceOf(ScalarNode::class, $node);
-    $this->assertEquals($value, $node->scalar);
+    $this->assertEquals($value, $node->getScalar());
     $this->assertEquals($deferred, $node->deferred);
     $this->assertEquals($factory, $node->factory);
     $this->assertEquals($cleanComment, $node->getInnerComments());

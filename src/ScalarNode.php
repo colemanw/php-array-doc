@@ -6,7 +6,7 @@ class ScalarNode extends BaseNode {
   /**
    * @var scalar
    */
-  public $scalar;
+  private $scalar;
 
   /**
    * @param scalar $scalar

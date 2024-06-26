@@ -48,13 +48,13 @@ class Printer {
 
     if ($node instanceof ScalarNode) {
       $constants = [FALSE => 'FALSE', TRUE => 'TRUE', NULL => 'NULL'];
-      $value = $constants[$node->scalar] ?? var_export($node->scalar, TRUE);
+      $value = $constants[$node->getScalar()] ?? var_export($node->getScalar(), TRUE);
       return $prefix . $value . $suffix;
     }
     elseif ($node instanceof ArrayNode) {
       $isSeq = array_column($node->items, 'key') === range(0, count($node->items) - 1);
       $isShort = array_reduce($node->items, function ($carry, $item) {
-        return $carry && ($item->value instanceof ScalarNode) && empty($item->value->getOuterComments()) && strlen($item->value->scalar) < 15;
+        return $carry && ($item->value instanceof ScalarNode) && empty($item->value->getOuterComments()) && strlen($item->value->getScalar()) < 15;
       }, count($node->items) < 5);
 
       $parts = [];
