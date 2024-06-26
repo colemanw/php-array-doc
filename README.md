@@ -39,6 +39,16 @@ return H::record([
 ## Example
 
 ```php
+# Generate a file from basic array data
+use PhpArrayDocument\PhpArrayDocument;
+$doc = PhpArrayDocument::create();
+$doc->getRoot()->importData([
+  'foo...' => 'bar...',
+]);
+file_put_contents($file, (new Printer())->print($doc));
+```
+
+```php
 # Update a file
 use PhpArrayDocument\Parser;
 $file = 'my-example.data.php';
@@ -62,7 +72,7 @@ foreach ($doc->root->walkNodes() as $node) {
 
 ## Cheatsheet
 
-Some comands to help with debugging:
+Some commands to help with debugging:
 
 ```bash
 ## Parse a PHP file
@@ -77,4 +87,3 @@ cat examples/simple-array.php | ./scripts/tokenize.php | less
 ## Tokenize an improvised PHP snippet
 echo '<?php return [1,2,3];' | ./scripts/tokenize.php
 ```
- 
