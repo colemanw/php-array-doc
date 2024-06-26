@@ -44,8 +44,8 @@ use PhpArrayDocument\Parser;
 $file = 'my-example.data.php';
 $doc = (new Parser())->parse(file_get_contents($file));
 
-$doc->root['label']->scalar = 'Hello World';
-$doc->root['label']->factory = 'E::ts';
+$doc->root['label'] = ScalarNode::create('Hello World')
+	->setFactory('E::ts');
 
 file_put_contents($file, (new Printer())->print($doc));
 ```
@@ -54,8 +54,8 @@ file_put_contents($file, (new Printer())->print($doc));
 # Rename a factory method
 $doc = (new Parser())->parse(file_get_contents($file));
 foreach ($doc->root->walkNodes() as $node) {
-  if ($node->factory === 'OldHelper::method') {
-    $node->factory = 'NewHelper::method';
+  if ($node->getFactory() === 'OldHelper::method') {
+    $node->setFactory('NewHelper::method');
   }
 } 
 ```
