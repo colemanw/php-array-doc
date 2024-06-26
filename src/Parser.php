@@ -36,7 +36,7 @@ class Parser {
       }
     }
 
-    $document->comments = $this->parseComments();
+    $document->setOuterComments($this->parseComments());
 
     $this->expect(T_RETURN)->skipWhitespace();
 
@@ -167,7 +167,7 @@ class Parser {
     $this->skipWhitespace();
 
     if (!empty($comments)) {
-      $value->comments = $comments;
+      $value->setOuterComments($comments);
     }
 
     $item = new ArrayItemNode($key, $value);

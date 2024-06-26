@@ -15,7 +15,7 @@ class ScalarNode extends BaseNode {
     $this->scalar = $scalar;
   }
 
-  public function create($scalar = NULL): ScalarNode {
+  public static function create($scalar = NULL): ScalarNode {
     return new static($scalar);
   }
 

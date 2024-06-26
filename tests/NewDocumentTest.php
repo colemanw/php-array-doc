@@ -10,30 +10,31 @@ class NewDocumentTest extends \PHPUnit\Framework\TestCase {
     $doc = new PhpArrayDocument();
     $doc->use['SettingsDefinition'] = 'Civi\Core\SettingsDefinition';
     $doc->use['E'] = 'CRM_Mosaico_ExtensionUtil';
-    $doc->comments = [
+    $doc->setOuterComments([
       "// About this doc\n",
       "// It has content.\n",
       "/" . '* Lots of content *' . "/\n",
-    ];
-    $doc->root = new ArrayNode();
+    ]);
+    $doc->root = ArrayNode::create();
     $doc->root->factory = 'SettingsDefinition::create';
-    $doc->root['name'] = new ScalarNode('hello');
-    $doc->root['name']->comments[] = "/* The name is important */\n";
-    $doc->root['label'] = new ScalarNode('Hello World!');
-    $doc->root['label']->factory = 'E::ts';
-    $doc->root['label']->comments[] = "// The label is shown to somebody\n";
-    $doc->root['active'] = new ScalarNode(TRUE);
-    $doc->root['default'] = new ScalarNode('ok');
-    $doc->root['default']->setCleanComment("The default is something\nMade with one or two lines\nOr three.\n");
+    $doc->root['name'] = ScalarNode::create('hello')
+      ->setOuterComments(["/* The name is important */\n"]);
+    $doc->root['label'] = ScalarNode::create('Hello World!')
+      ->setFactory('E::ts')
+      ->setOuterComments(["// The label is shown to somebody\n"]);
+    $doc->root['active'] = ScalarNode::create(TRUE);
+    $doc->root['default'] = ScalarNode::create('ok');
+    $doc->root['default']->setInnerComments("The default is something\nMade with one or two lines\nOr three.\n");
 
-    $doc->root['html'] = new ArrayNode();
-    $doc->root['html']['bold'] = new ScalarNode(TRUE);
-    $doc->root['html']['bold']->comments[] = "// To boldly go\n";
-    $doc->root['html']['bold']->comments[] = "// where no font face has gone before\n";
-
-    $doc->root['details'] = new ArrayNode();
+    $doc->root['html'] = ArrayNode::create();
+    $doc->root['html']['bold'] = ScalarNode::create(TRUE)
+      ->setOuterComments([
+        "// To boldly go\n",
+        "// where no font face has gone before\n",
+      ]);
+    $doc->root['details'] = ArrayNode::create();
     $doc->root['details']->deferred = TRUE;
-    $doc->root['details']['alskjdf asdf'] = new ScalarNode(123);
+    $doc->root['details']['alskjdf asdf'] = ScalarNode::create(123);
 
     $printer = new Printer();
     $actual = $printer->print($doc);

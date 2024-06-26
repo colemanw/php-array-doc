@@ -21,7 +21,7 @@ class ArrayNode extends BaseNode implements \ArrayAccess, \IteratorAggregate, \C
     $this->items = $items;
   }
 
-  public function create($items = []): ArrayNode {
+  public static function create($items = []): ArrayNode {
     return new static($items);
   }
 

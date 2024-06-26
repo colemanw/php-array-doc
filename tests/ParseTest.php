@@ -18,9 +18,9 @@ class ParseTest extends \PHPUnit\Framework\TestCase {
 
     $this->assertEquals('Civi\Core\SettingsDefinition', $document->use['SettingsDefinition']);
     $this->assertEquals('CRM_Mosaico_ExtensionUtil', $document->use['E']);
-    $this->assertEquals("// About this doc\n", $document->comments[0]);
-    $this->assertEquals("// It has content.\n", $document->comments[1]);
-    $this->assertEquals("/" . '* Lots of content *' . "/\n", $document->comments[2]);
+    $this->assertEquals("// About this doc\n", $document->getOuterComments()[0]);
+    $this->assertEquals("// It has content.\n", $document->getOuterComments()[1]);
+    $this->assertEquals("/" . '* Lots of content *' . "/\n", $document->getOuterComments()[2]);
 
     $this->assertArrayNode($document->root, FALSE, 'SettingsDefinition::create');
     $this->assertScalarNode($document->root['name'], 'hello', FALSE, NULL, "The name is important\n");
@@ -37,7 +37,7 @@ class ParseTest extends \PHPUnit\Framework\TestCase {
     $this->assertEquals($value, $node->scalar);
     $this->assertEquals($deferred, $node->deferred);
     $this->assertEquals($factory, $node->factory);
-    $this->assertEquals($cleanComment, $node->getCleanComment());
+    $this->assertEquals($cleanComment, $node->getInnerComments());
   }
 
   protected function assertArrayNode($node, bool $deferred, ?string $factory) {
