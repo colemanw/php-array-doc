@@ -46,24 +46,25 @@ class ArrayNode extends BaseNode implements \ArrayAccess, \IteratorAggregate, \C
     return NULL;
   }
 
-  public function getIterator() {
+  public function getIterator(): \Traversable {
     return new \ArrayIterator($this->items);
   }
 
-  public function count() {
+  public function count(): int {
     return count($this->items);
   }
 
-  public function offsetExists($offset) {
+  public function offsetExists($offset): bool {
     return $this->getItem($offset) !== NULL;
   }
 
+  #[\ReturnTypeWillChange]
   public function offsetGet($offset) {
     $item = $this->getItem($offset);
     return $item ? $item->value : NULL;
   }
 
-  public function offsetSet($offset, $value) {
+  public function offsetSet($offset, $value): void {
     if (!($value instanceof ScalarNode || $value instanceof ArrayNode)) {
       $type = gettype($value);
       if ($type === 'object') {
@@ -79,7 +80,7 @@ class ArrayNode extends BaseNode implements \ArrayAccess, \IteratorAggregate, \C
     }
   }
 
-  public function offsetUnset($offset) {
+  public function offsetUnset($offset): void {
     $pos = $this->getItemPosition($offset);
     if ($pos !== NULL) {
       unset($this->items[$pos]);

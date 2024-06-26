@@ -221,7 +221,11 @@ class Parser {
   private function parseClassName() {
     $className = '';
 
-    while ($this->currentToken[0] == T_NS_SEPARATOR || $this->currentToken[0] == T_STRING) {
+    $nameTypes = version_compare(PHP_VERSION, '8.0', '>=')
+      ? [T_NS_SEPARATOR, T_STRING, T_NAME_QUALIFIED]
+      : [T_NS_SEPARATOR, T_STRING];
+
+    while (in_array($this->currentToken[0], $nameTypes)) {
       $className .= $this->currentToken[1];
       $this->nextToken();
     }

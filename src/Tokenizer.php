@@ -16,13 +16,16 @@ class Tokenizer {
    * @param int|string|array $token
    * @return string
    */
-  public static function getName($token): string {
+  public static function getName($token): ?string {
     $id = is_array($token) ? $token[0] : $token;
     if (is_string($id) && strlen($id) === 1) {
       return $id;
     }
     if (is_string($id) && strpos($id, '_polyfill_') === 0) {
       return substr($id, strlen('_polyfill_'));
+    }
+    if ($id === NULL) {
+      return NULL;
     }
     return token_name($id);
   }
