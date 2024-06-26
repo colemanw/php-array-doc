@@ -8,8 +8,24 @@ if (!defined('T_FN')) {
 
 class Tokenizer {
 
-  public static function getTokens(string $content): array {
-    return array_map([__CLASS__, 'normalizeToken'], token_get_all($content));
+  public static function getTokens(string $content): iterable {
+    yield from [];
+    foreach (token_get_all($content) as $token) {
+      // PHP 7.3 doesn't have T_FN. But we can pretend it does.
+      if (is_array($token) && $token[0] === T_STRING && $token[1] === 'fn') {
+        $token[0] = T_FN;
+        yield $token;
+      }
+      // PHP 7.x puts newlines into T_COMMENT, but PHP 8.x puts them in separate T_WHITESPACE. Act like PHP 8..x.
+      elseif (is_array($token) && $token[0] === T_COMMENT && substr($token[1], -1) === "\n") {
+        $token[1] = substr($token[1], 0, -1);
+        yield $token;
+        yield [T_WHITESPACE, "\n", $token[2]];
+      }
+      else {
+        yield $token;
+      }
+    }
   }
 
   /**
@@ -28,21 +44,6 @@ class Tokenizer {
       return NULL;
     }
     return token_name($id);
-  }
-
-  /**
-   * There may be small differences in how token_get_all() behaves on different versions of PHP.
-   *
-   * @param array|string $token
-   *   Ex: '('
-   *   Ex: [T_STRING, 'hello_world', ...]
-   * @return array|string
-   */
-  protected static function normalizeToken($token) {
-    if (is_array($token) && $token[0] === T_STRING && $token[1] === 'fn') {
-      $token[0] = T_FN;
-    }
-    return $token;
   }
 
 }

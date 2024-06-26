@@ -17,7 +17,8 @@ class Parser {
   private $currentTokenId;
 
   public function parse($code) {
-    $this->tokens = Tokenizer::getTokens($code);
+    $tokens = Tokenizer::getTokens($code);
+    $this->tokens = is_array($tokens) ? $tokens : iterator_to_array($tokens);
     $this->pos = 0;
     $this->nextToken();
     return $this->parseDocument();
