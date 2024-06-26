@@ -40,7 +40,7 @@ class Parser {
 
     $this->expect(T_RETURN)->skipWhitespace();
 
-    $document->root = $this->parseValue();
+    $document->setRoot($this->parseValue());
     $this->skipWhitespace();
 
     $this->expect(';')->skipWhitespace();

@@ -14,7 +14,23 @@ class PhpArrayDocument {
   /**
    * @var \PhpArrayDocument\ArrayNode|\PhpArrayDocument\ScalarNode|null
    */
-  public $root = NULL;
+  private $root = NULL;
+
+  /**
+   * @return \PhpArrayDocument\ArrayNode|\PhpArrayDocument\ScalarNode|null
+   */
+  public function getRoot() {
+    return $this->root;
+  }
+
+  /**
+   * @param \PhpArrayDocument\ArrayNode|\PhpArrayDocument\ScalarNode|null $root
+   * @return PhpArrayDocument
+   */
+  public function setRoot($root) {
+    $this->root = $root;
+    return $this;
+  }
 
   /**
    * @return $this

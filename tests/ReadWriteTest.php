@@ -65,8 +65,8 @@ class ReadWriteTest extends \PHPUnit\Framework\TestCase {
    */
   public function testBasicDataReadAndWrite(array $exampleData): void {
     $doc = \PhpArrayDocument\PhpArrayDocument::create();
-    $doc->root->importData($exampleData);
-    $exported = $doc->root->exportData();
+    $doc->getRoot()->importData($exampleData);
+    $exported = $doc->getRoot()->exportData();
     $this->assertEquals($exampleData, $exported);
   }
 
