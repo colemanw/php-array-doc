@@ -20,7 +20,7 @@ class ArrayItemNode extends BaseNode {
       yield $this;
     }
     if ($this->value) {
-      $this->value->walkNodes($type);
+      yield from $this->value->walkNodes($type);
     }
   }
 
