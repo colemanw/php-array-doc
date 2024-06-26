@@ -7,7 +7,7 @@ class PhpArrayDocument {
    * @var array
    *   Ex: ['ClassAlias' => 'Full\Class\Name']
    */
-  public $use = [];
+  private $use = [];
 
   use CommentableTrait;
 
@@ -39,6 +39,44 @@ class PhpArrayDocument {
     $result = new static();
     $result->root = ArrayNode::create();
     return $result;
+  }
+
+  /**
+   * @param string $class
+   *   Ex: 'Full\Class\Name'
+   * @param string|null $alias
+   *   Ex: 'ClassAlias'
+   * @return $this
+   */
+  public function addUse(string $class, ?string $alias = NULL) {
+    if ($alias === NULL) {
+      $parts = explode('\\', $class);
+      $alias = array_pop($parts);
+    }
+    $this->use[$alias] = $class;
+    return $this;
+  }
+
+  /**
+   * @param string $class
+   *   Ex: 'Full\Class\Name'
+   * @return $this
+   */
+  public function removeUse(string $class) {
+    foreach (array_keys($this->use) as $alias) {
+      if ($this->use[$alias] === $class) {
+        unset($this->use[$alias]);
+      }
+    }
+    return $this;
+  }
+
+  /**
+   * @return array
+   *   Ex: ['ClassAlias' => 'Full\Class\Name']
+   */
+  public function getUses(): array {
+    return $this->use;
   }
 
   /**

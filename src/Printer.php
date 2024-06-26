@@ -13,7 +13,7 @@ class Printer {
 
   public function print(PhpArrayDocument $document): string {
     $buf[] = '<' . "?php";
-    foreach ($document->use as $alias => $class) {
+    foreach ($document->getUses() as $alias => $class) {
       $defaultAlias = array_reverse(explode("\\", $class))[0];
       if ($alias === $defaultAlias) {
         $buf[] = sprintf('use %s;', $class);

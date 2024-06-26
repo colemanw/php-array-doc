@@ -7,14 +7,14 @@ class NewDocumentTest extends \PHPUnit\Framework\TestCase {
   public function testCreate() {
     $example = version_compare(PHP_VERSION, '7.4', '<') ? 'setting-definition-7.3.php' : 'setting-definition-7.4.php';
 
-    $doc = PhpArrayDocument::create();
-    $doc->use['SettingsDefinition'] = 'Civi\Core\SettingsDefinition';
-    $doc->use['E'] = 'CRM_Mosaico_ExtensionUtil';
-    $doc->setOuterComments([
-      "// About this doc\n",
-      "// It has content.\n",
-      "/" . '* Lots of content *' . "/\n",
-    ]);
+    $doc = PhpArrayDocument::create()
+      ->addUse('Civi\Core\SettingsDefinition')
+      ->addUse('CRM_Mosaico_ExtensionUtil', 'E')
+      ->setOuterComments([
+        "// About this doc\n",
+        "// It has content.\n",
+        "/" . '* Lots of content *' . "/\n",
+      ]);
     $doc->getRoot()->setFactory('SettingsDefinition::create');
     $doc->getRoot()['name'] = ScalarNode::create('hello')
       ->setOuterComments(["/* The name is important */\n"]);

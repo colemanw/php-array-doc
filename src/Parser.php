@@ -31,7 +31,7 @@ class Parser {
 
     while ($this->currentToken[0] == T_USE) {
       foreach ($this->parseUse() as $alias => $class) {
-        $document->use[$alias] = $class;
+        $document->addUse($class, $alias);
         $this->skipWhitespace();
       }
     }

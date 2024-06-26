@@ -16,8 +16,8 @@ class ParseTest extends \PHPUnit\Framework\TestCase {
     $parser = new Parser();
     $document = $parser->parse($input);
 
-    $this->assertEquals('Civi\Core\SettingsDefinition', $document->use['SettingsDefinition']);
-    $this->assertEquals('CRM_Mosaico_ExtensionUtil', $document->use['E']);
+    $this->assertEquals('Civi\Core\SettingsDefinition', $document->getUses()['SettingsDefinition']);
+    $this->assertEquals('CRM_Mosaico_ExtensionUtil', $document->getUses()['E']);
     $this->assertEquals("// About this doc\n", $document->getOuterComments()[0]);
     $this->assertEquals("// It has content.\n", $document->getOuterComments()[1]);
     $this->assertEquals("/" . '* Lots of content *' . "/\n", $document->getOuterComments()[2]);
