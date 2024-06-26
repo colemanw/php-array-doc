@@ -8,7 +8,7 @@ class ReadWriteTest extends \PHPUnit\Framework\TestCase {
   public function getExamples() {
     $es = [];
 
-    $phpVer = function($op, $tgt): bool {
+    $phpVer = function ($op, $tgt): bool {
       return version_compare(PHP_VERSION, $tgt, $op);
     };
 
@@ -41,6 +41,33 @@ class ReadWriteTest extends \PHPUnit\Framework\TestCase {
     $output = $printer->print($document);
 
     $this->assertEquals($input, $output, "Parsed input and generated output should match");
+  }
+
+  public function getExampleData(): array {
+    $es = [];
+    $es[] = [[]];
+    $es[] = [['a' => 'b']];
+    $es[] = [['a', 'b', 'c']];
+    $es[] = [
+      [
+        'a1' => 'a one',
+        'a2' => ['b1' => []],
+        'a3' => ['b2' => 'b two'],
+        'a4' => ['b3' => ['c1' => 'c one', 'c2' => 'c two']],
+      ],
+    ];
+    return $es;
+  }
+
+  /**
+   * @param array $exampleData
+   * @dataProvider getExampleData
+   */
+  public function testBasicDataReadAndWrite(array $exampleData): void {
+    $doc = \PhpArrayDocument\PhpArrayDocument::create();
+    $doc->root->importData($exampleData);
+    $exported = $doc->root->exportData();
+    $this->assertEquals($exampleData, $exported);
   }
 
 }

@@ -12,9 +12,18 @@ class PhpArrayDocument {
   use CommentableTrait;
 
   /**
-   * @var \PhpArrayDocument\BaseNode|null
+   * @var \PhpArrayDocument\ArrayNode|\PhpArrayDocument\ScalarNode|null
    */
   public $root = NULL;
+
+  /**
+   * @return $this
+   */
+  public static function create() {
+    $result = new static();
+    $result->root = ArrayNode::create();
+    return $result;
+  }
 
   /**
    * Find expressions like "E::ts()" and turn them into "CRM_Foo_ExtensionInfo::ts()".

@@ -21,8 +21,44 @@ class ArrayNode extends BaseNode implements \ArrayAccess, \IteratorAggregate, \C
     $this->items = $items;
   }
 
-  public static function create($items = []): ArrayNode {
-    return new static($items);
+  public static function create(): ArrayNode {
+    return new static();
+  }
+
+  /**
+   * Take a basic data-array. Load it into the document.
+   *
+   * @param array $data
+   *   Simple array-tree. This does not have any comments, deferrals, factories, etc.
+   *   Just arrays and scalars.
+   * @return $this
+   */
+  public function importData(array $data): ArrayNode {
+    foreach ($data as $key => $value) {
+      if (is_array($value)) {
+        if (!isset($this[$key])) {
+          $this[$key] = ArrayNode::create();
+        }
+        $this[$key]->importData($value);
+      }
+      else {
+        if (!isset($this[$key])) {
+          $this[$key] = ScalarNode::create();
+        }
+        $this[$key]->setScalar($value);
+      }
+    }
+    return $this;
+  }
+
+  public function exportData(): array {
+    $result = [];
+    foreach ($this->items as $item) {
+      /** @var \PhpArrayDocument\ArrayItemNode $item */
+      $v = $item->getValue();
+      $result[$item->getKey()] = ($v instanceof ArrayNode) ? $v->exportData() : $v->getScalar();
+    }
+    return $result;
   }
 
   public function walkNodes(string $type = BaseNode::class) {

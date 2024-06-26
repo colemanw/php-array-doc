@@ -38,7 +38,32 @@ class NewDocumentTest extends \PHPUnit\Framework\TestCase {
 
     $printer = new Printer();
     $actual = $printer->print($doc);
+    $file = dirname(__DIR__) . '/examples/' . $example;
+    $expected = file_get_contents($file);
+    $this->assertEquals($expected, $actual);
+  }
 
+  public function testCreateMergeData() {
+    $example = version_compare(PHP_VERSION, '7.4', '<') ? 'simple-array-7.3.php' : 'simple-array-7.4.php';
+
+    $basicData = [
+      'name' => 'hello',
+      'label' => 'Hello World!',
+      'active' => TRUE,
+      'html' => [
+        'bold' => TRUE,
+      ],
+      'details' => [
+        'alskjdf asdf' => 123,
+      ],
+    ];
+
+    $doc = PhpArrayDocument::create();
+    $doc->root->importData($basicData);
+    $doc->root['details']->setDeferred(TRUE);
+
+    $printer = new Printer();
+    $actual = $printer->print($doc);
     $file = dirname(__DIR__) . '/examples/' . $example;
     $expected = file_get_contents($file);
     $this->assertEquals($expected, $actual);
