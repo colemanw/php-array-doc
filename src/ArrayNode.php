@@ -15,7 +15,7 @@ class ArrayNode extends BaseNode implements \ArrayAccess, \IteratorAggregate, \C
   /**
    * @var ArrayItemNode[]
    */
-  public $items = [];
+  private $items = [];
 
   public function __construct($items = []) {
     $this->items = $items;
@@ -30,6 +30,13 @@ class ArrayNode extends BaseNode implements \ArrayAccess, \IteratorAggregate, \C
     foreach ($this->items as $arrayItem) {
       yield from $arrayItem->walkNodes($type);
     }
+  }
+
+  /**
+   * @return \PhpArrayDocument\ArrayItemNode[]
+   */
+  public function getItems(): array {
+    return $this->items;
   }
 
   public function getItem($key): ?ArrayItemNode {

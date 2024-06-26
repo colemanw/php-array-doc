@@ -52,15 +52,15 @@ class Printer {
       return $prefix . $value . $suffix;
     }
     elseif ($node instanceof ArrayNode) {
-      $isSeq = array_column($node->items, 'key') === range(0, count($node->items) - 1);
-      $isShort = array_reduce($node->items, function ($carry, $item) {
+      $isSeq = array_column($node->getItems(), 'key') === range(0, count($node->getItems()) - 1);
+      $isShort = array_reduce($node->getItems(), function ($carry, $item) {
         return $carry && ($item->value instanceof ScalarNode) && empty($item->value->getOuterComments()) && strlen($item->value->getScalar()) < 15;
-      }, count($node->items) < 5);
+      }, count($node->getItems()) < 5);
 
       $parts = [];
       $parentIndent = str_repeat(' ', $indent * 2);
       $childIndent = str_repeat(' ', (1 + $indent) * 2);
-      foreach ($node->items as $item) {
+      foreach ($node->getItems() as $item) {
         $part = '';
         if ($item->value->getOuterComments()) {
           $part .= $item->value->renderComments($childIndent);
