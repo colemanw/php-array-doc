@@ -1,5 +1,4 @@
 <?php
-
 return [
   'name' => 'hello',
   'label' => 'Hello World!',
@@ -7,7 +6,7 @@ return [
   'html' => [
     'bold' => TRUE,
   ],
-  'details' => fn() => [
+  'details' => function() { return [
     'alskjdf asdf' => 123,
-  ]
+  ]; },
 ];

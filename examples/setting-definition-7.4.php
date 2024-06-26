@@ -15,5 +15,5 @@ return SettingsDefinition::create([
   ],
   'details' => fn() => [
     'alskjdf asdf' => 123,
-  ]
+  ],
 ]);
