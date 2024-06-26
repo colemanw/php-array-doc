@@ -84,13 +84,13 @@ class Parser {
     elseif ($this->isToken(T_FN)) {
       $this->expectSequence([T_FN, "(", ")", T_DOUBLE_ARROW]);
       $result = $this->parseValue();
-      $result->deferred = TRUE;
+      $result->setDeferred(TRUE);
       return $result;
     }
     elseif ($this->isToken(T_FUNCTION)) {
       $this->expectSequence([T_FUNCTION, "(", ")", "{", T_RETURN]);
       $result = $this->parseValue();
-      $result->deferred = TRUE;
+      $result->setDeferred(TRUE);
       $this->expectSequence([';', '}']);
       return $result;
     }
@@ -99,10 +99,10 @@ class Parser {
       $this->expect('(')->skipWhitespace();
       $result = $this->parseValue();
       $this->expect(')')->skipWhitespace();
-      if ($result->factory !== NULL) {
-        throw new ParseException('Cannot use multiple factories: ' . json_encode([$result->factory, $factory]));
+      if ($result->getFactory() !== NULL) {
+        throw new ParseException('Cannot use multiple factories: ' . json_encode([$result->getFactory(), $factory]));
       }
-      $result->factory = $factory;
+      $result->setFactory($factory);
       return $result;
     }
 

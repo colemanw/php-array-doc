@@ -15,8 +15,8 @@ class NewDocumentTest extends \PHPUnit\Framework\TestCase {
       "// It has content.\n",
       "/" . '* Lots of content *' . "/\n",
     ]);
-    $doc->root = ArrayNode::create();
-    $doc->root->factory = 'SettingsDefinition::create';
+    $doc->root = ArrayNode::create()
+      ->setFactory('SettingsDefinition::create');
     $doc->root['name'] = ScalarNode::create('hello')
       ->setOuterComments(["/* The name is important */\n"]);
     $doc->root['label'] = ScalarNode::create('Hello World!')
@@ -33,7 +33,7 @@ class NewDocumentTest extends \PHPUnit\Framework\TestCase {
         "// where no font face has gone before\n",
       ]);
     $doc->root['details'] = ArrayNode::create();
-    $doc->root['details']->deferred = TRUE;
+    $doc->root['details']->setDeferred(TRUE);
     $doc->root['details']['alskjdf asdf'] = ScalarNode::create(123);
 
     $printer = new Printer();

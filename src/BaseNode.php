@@ -9,14 +9,14 @@ abstract class BaseNode {
    * @var string|null
    *   Ex: 'ts' or 'E::ts' or 'Some\Class\Name::ts'
    */
-  public $factory = NULL;
+  private $factory = NULL;
 
   /**
    * Does this data use deferred construction (`fn() => [...data..]`)?
    *
    * @var bool
    */
-  public $deferred = FALSE;
+  private $deferred = FALSE;
 
   /**
    * @template T of BaseNode

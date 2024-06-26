@@ -32,11 +32,11 @@ class Printer {
 
   private function printNode(BaseNode $node, int $indent = 0): string {
     $prefix = $suffix = '';
-    if ($node->factory) {
-      $prefix .= $node->factory . '(';
+    if ($node->getFactory()) {
+      $prefix .= $node->getFactory() . '(';
       $suffix = "$suffix)";
     }
-    if ($node->deferred) {
+    if ($node->isDeferred()) {
       if ($this->useFn) {
         $prefix .= 'function() { return ';
         $suffix = "; }" . $suffix;

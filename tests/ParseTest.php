@@ -35,15 +35,15 @@ class ParseTest extends \PHPUnit\Framework\TestCase {
   protected function assertScalarNode($node, $value, bool $deferred, ?string $factory, ?string $cleanComment) {
     $this->assertInstanceOf(ScalarNode::class, $node);
     $this->assertEquals($value, $node->getScalar());
-    $this->assertEquals($deferred, $node->deferred);
-    $this->assertEquals($factory, $node->factory);
+    $this->assertEquals($deferred, $node->isDeferred());
+    $this->assertEquals($factory, $node->getFactory());
     $this->assertEquals($cleanComment, $node->getInnerComments());
   }
 
   protected function assertArrayNode($node, bool $deferred, ?string $factory) {
     $this->assertInstanceOf(ArrayNode::class, $node);
-    $this->assertEquals($deferred, $node->deferred, 'Check value of $node->deferred');
-    $this->assertEquals($factory, $node->factory, 'Check value of $node->factory');
+    $this->assertEquals($deferred, $node->isDeferred(), 'Check value of $node->deferred');
+    $this->assertEquals($factory, $node->getFactory(), 'Check value of $node->factory');
   }
 
 }
