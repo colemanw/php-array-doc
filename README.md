@@ -1,6 +1,6 @@
 # PhpArrayDocument
 
-This is a parser/encoder for a subset of PHP focused on data. A document
+This is a parser/printer for a subset of PHP focused on data. A document
 looks like:
 
 ```php
@@ -35,6 +35,13 @@ return H::record([
   'label' => H::translate('Hello World'),
 ]);
 ```
+
+`PhpArrayDocument` is a compatible subset of PHP, with these considerations:
+
+* Allows `array` values and `scalar` values (`string`, `int`, `bool`, etc).
+* Allows *tagged-values* or *factory-functions* which look like *global or static method-calls*.
+* Allows deferred construction (`fn() => [...data...]`)
+* Prohibits objects, loops, math, concatenation, includes, custom functions, etc.
 
 ## Model
 
