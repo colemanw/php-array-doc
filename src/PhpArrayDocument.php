@@ -9,10 +9,7 @@ class PhpArrayDocument {
    */
   public $use = [];
 
-  /**
-   * @var array
-   */
-  public $dataComments = [];
+  use CommentableTrait;
 
   /**
    * @var \PhpArrayDocument\BaseNode|null

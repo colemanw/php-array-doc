@@ -22,9 +22,9 @@ class Printer {
         $buf[] = sprintf('use %s as %s;', $class, $alias);
       }
     }
-    if ($document->dataComments) {
+    if ($document->comments) {
       $buf[] = '';
-      $buf[] = rtrim(implode("", $document->dataComments), "\n");
+      $buf[] = rtrim(implode("", $document->comments), "\n");
     }
     $buf[] = 'return ' . $this->printNode($document->root) . ";\n";
     return implode("\n", $buf);
@@ -54,7 +54,7 @@ class Printer {
     elseif ($node instanceof ArrayNode) {
       $isSeq = array_column($node->items, 'key') === range(0, count($node->items) - 1);
       $isShort = array_reduce($node->items, function ($carry, $item) {
-        return $carry && ($item->value instanceof ScalarNode) && empty($item->value->comment) && strlen($item->value->scalar) < 15;
+        return $carry && ($item->value instanceof ScalarNode) && empty($item->value->comments) && strlen($item->value->scalar) < 15;
       }, count($node->items) < 5);
 
       $parts = [];
@@ -62,8 +62,8 @@ class Printer {
       $childIndent = str_repeat(' ', (1 + $indent) * 2);
       foreach ($node->items as $item) {
         $part = '';
-        if ($item->value->comment) {
-          $part .= $item->value->getRawComment($childIndent);
+        if ($item->value->comments) {
+          $part .= $item->value->getIndentedComments($childIndent);
         }
         if (!($isSeq && $isShort)) {
           $part .= $childIndent;
