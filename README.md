@@ -36,6 +36,24 @@ return H::record([
 ]);
 ```
 
+## Model
+
+* Basic Concepts
+    * __Substance__: Each "_PHP array document_" contains a tree of `array`s and `scalar`s.
+    * __Metadata__: Individual values may be annotated with comments and/or factory-functions (such as `ts(...)`).
+    * __Evaluation__: If you `include` or `require` the PHP document directly, you will literally get `array`s and `scalar`s.
+    * __Read/Write__: If you need to programmatically inspect or update the content, then the `PhpArrayDocument` aims to help.
+* Classes
+    * `PhpArrayDocument`: This captures the overall `*.php` file, including any top-level elements (`use` or docblocks) and the root `array`.
+    * `ArrayNode` (extends `BaseNode`): An element in the tree that corresponds to `array()`
+    * `ArrayItemNode` (extends `BaseNode`): A key-value pair that exists within an `array()`
+    * `ScalarNode` (extends `BaseNode`): An atomic value that lives inside an array.
+* Verbs
+    * __Parse__: Read the PHP document as an instance of `PhpArrayDocument`
+    * __Print__: Render `PhpArrayDocument` as a string (`<?php return [...]`)
+    * __Import Data__: Add basic PHP array data to a `PhpArrayDocument` (*without any metadata/comments/factory-functions*)
+    * __Export Data__: Grab the PHP (*discarding any metadata/comments/factory-functions*)
+
 ## Example
 
 ```php
