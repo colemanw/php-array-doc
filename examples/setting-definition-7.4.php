@@ -3,6 +3,8 @@ use Civi\Core\SettingsDefinition;
 use CRM_Mosaico_ExtensionUtil as E;
 
 // About this doc
+// It has content.
+/* Lots of content */
 return SettingsDefinition::create([
   /* The name is important */
   'name' => 'hello',

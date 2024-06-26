@@ -36,10 +36,7 @@ class Parser {
       }
     }
 
-    while ($this->currentToken[0] == T_COMMENT) {
-      $document->dataComments[] = $this->currentToken[1];
-      $this->nextToken()->skipWhitespace();
-    }
+    $document->dataComments = $this->parseComments();
 
     $this->expect(T_RETURN)->skipWhitespace();
 
@@ -148,11 +145,7 @@ class Parser {
   private function parseArrayItem() {
     $this->skipWhitespace();
 
-    $comments = [];
-    while ($this->isToken([T_COMMENT, T_DOC_COMMENT, T_WHITESPACE])) {
-      $comments[] = ltrim($this->currentToken[1], ' \t');
-      $this->nextToken();
-    }
+    $comments = $this->parseComments();
 
     if ($this->isScalar($this->currentToken)) {
       $first = $this->parseScalar();
@@ -305,6 +298,23 @@ class Parser {
       $token[0] = Tokenizer::getName($token);
     }
     throw new ParseException('Unexpected token: ' . json_encode($token));
+  }
+
+  /**
+   * @return array
+   */
+  private function parseComments(): array {
+    $comments = [];
+    while ($this->isToken([T_COMMENT, T_DOC_COMMENT, T_WHITESPACE])) {
+      $comment = ltrim($this->currentToken[1], ' \t');
+      $this->nextToken();
+      if ($this->isToken(T_WHITESPACE)) {
+        $comment .= $this->currentToken[1];
+        $this->nextToken();
+      }
+      $comments[] = $comment;
+    }
+    return $comments;
   }
 
 }
