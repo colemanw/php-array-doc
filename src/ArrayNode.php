@@ -120,7 +120,7 @@ class ArrayNode extends BaseNode implements \ArrayAccess, \IteratorAggregate, \C
       throw new \RuntimeException(sprintf("Cannot add object (%s) to ArrayValueNode", $type));
     }
     if ($item = $this->getItem($offset)) {
-      $item->value = $value;
+      $item->setValue($value);
     }
     else {
       $this->items[] = new ArrayItemNode($offset, $value);
