@@ -9,6 +9,7 @@ return [
   'details' => fn() => [
     'zero' => 0,
     'one' => 1,
+    'null' => NULL,
     'true' => TRUE,
     'false' => FALSE,
     'alskjdf asdf' => 123,

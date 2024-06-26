@@ -197,10 +197,14 @@ class Parser {
       $this->nextToken()->skipWhitespace();
     }
     elseif ($this->isToken(T_STRING)) {
-      $constants = ['FALSE' => FALSE, 'TRUE' => TRUE, 'NULL' => NULL];
-      $value = strtoupper($this->currentToken[1]);
-      if (isset($constants[$value])) {
-        $result = $constants[$value];
+      $upperValue = strtoupper($this->currentToken[1]);
+      $constants = ['FALSE' => FALSE, 'TRUE' => TRUE];
+      if ($upperValue === 'NULL') {
+        $result = NULL;
+        $this->nextToken()->skipWhitespace();
+      }
+      elseif (isset($constants[$upperValue])) {
+        $result = $constants[$upperValue];
         $this->nextToken()->skipWhitespace();
       }
       else {
