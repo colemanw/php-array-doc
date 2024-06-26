@@ -32,6 +32,24 @@ class ParserTest extends \PHPUnit\Framework\TestCase {
     $this->assertArrayNode($document->getRoot()['details'], TRUE, NULL);
   }
 
+  public function testQuothPhp(): void {
+    $file = dirname(__DIR__) . '/examples/quoth-php.php';
+    $input = file_get_contents($file);
+    $realData = require $file;
+    $this->assertEquals($this->parseExport($input), $realData);
+  }
+
+  public function testUnsupported(): void {
+    $return = function($v) {
+      return '<' . '?php return [' . $v . '];';
+    };
+
+    $this->assertEquals($this->parseExport($return('"foo"')), ['foo']);
+    $this->assertParseFailure($return('"$foo"'), 'Unexpected token: "\""');
+    $this->assertParseFailure($return('`foo`'), 'Unexpected token: "`"');
+    $this->assertParseFailure($return('TRUE ? 1 : 2'), 'Unexpected token: "?"');
+  }
+
   protected function assertScalarNode($node, $value, bool $deferred, ?string $factory, ?string $cleanComment) {
     $this->assertInstanceOf(ScalarNode::class, $node);
     $this->assertEquals($value, $node->getScalar());
@@ -44,6 +62,28 @@ class ParserTest extends \PHPUnit\Framework\TestCase {
     $this->assertInstanceOf(ArrayNode::class, $node);
     $this->assertEquals($deferred, $node->isDeferred(), 'Check value of $node->deferred');
     $this->assertEquals($factory, $node->getFactory(), 'Check value of $node->factory');
+  }
+
+  protected function assertParseFailure(string $rawExpression, string $message): void {
+    $parser = new Parser();
+    try {
+      $parser->parse($rawExpression);
+      $this->fail("Parsing this expression should generate a failure: " . $rawExpression);
+    }
+    catch (\PhpArrayDocument\ParseException $e) {
+      $this->assertStringContainsString($message, $e->getMessage());
+    }
+  }
+
+  /**
+   * @param $rawExpression
+   * @return array
+   */
+  protected function parseExport($rawExpression): array {
+    $parser = new Parser();
+    $document = $parser->parse($rawExpression);
+    $exportedData = $document->getRoot()->exportData();
+    return $exportedData;
   }
 
 }

@@ -193,8 +193,10 @@ class Parser {
       $this->nextToken()->skipWhitespace();
     }
     elseif ($this->isToken(T_CONSTANT_ENCAPSED_STRING)) {
-      $result = substr($this->currentToken[1], 1, -1);
-      $result = stripslashes($result);
+      // Ugh. Proper quoting rules would be a pain to write.
+      // On the upside: by definition, T_CONSTANT_ENCAPSED_STRING doesn't have any executable $'s or similar.
+      // $result = stripcslashes(substr($this->currentToken[1], 1, -1));
+      $result = eval('return ' . $this->currentToken[1] . ';');
       $this->nextToken()->skipWhitespace();
     }
     elseif ($this->isToken(T_STRING)) {

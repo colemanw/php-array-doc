@@ -43,6 +43,14 @@ class ReadWriteTest extends \PHPUnit\Framework\TestCase {
     $this->assertEquals($input, $output, "Parsed input and generated output should match");
   }
 
+  public function testPreferSingleQuotes() {
+    $input = '<' . '?php return ["ab cd"];';
+    $expect = '<' . "?php\nreturn [\n  0 => 'ab cd',\n];\n";
+    $doc = (new Parser())->parse($input);
+    $output = (new Printer())->print($doc);
+    $this->assertEquals($expect, $output);
+  }
+
   public function getExampleData(): array {
     $es = [];
     $es[] = [[]];
