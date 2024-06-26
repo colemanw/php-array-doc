@@ -3,12 +3,12 @@ namespace PhpArrayDocument;
 
 class ArrayItemNode extends BaseNode {
 
-  public $key;
+  private $key;
 
   /**
    * @var \PhpArrayDocument\ScalarNode|\PhpArrayDocument\ArrayNode|null
    */
-  public $value;
+  private $value;
 
   public function __construct($key, BaseNode $value) {
     $this->key = $key;
@@ -22,6 +22,38 @@ class ArrayItemNode extends BaseNode {
     if ($this->value) {
       $this->value->walkNodes($type);
     }
+  }
+
+  /**
+   * @return mixed
+   */
+  public function getKey() {
+    return $this->key;
+  }
+
+  /**
+   * @param mixed $key
+   * @return $this
+   */
+  public function setKey($key) {
+    $this->key = $key;
+    return $this;
+  }
+
+  /**
+   * @return \PhpArrayDocument\ArrayNode|\PhpArrayDocument\ScalarNode|null
+   */
+  public function getValue() {
+    return $this->value;
+  }
+
+  /**
+   * @param \PhpArrayDocument\ArrayNode|\PhpArrayDocument\ScalarNode|null $value
+   * @return $this
+   */
+  public function setValue($value) {
+    $this->value = $value;
+    return $this;
   }
 
 }

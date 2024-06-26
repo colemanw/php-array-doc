@@ -124,8 +124,8 @@ class Parser {
     $this->expect($openClose[0]);
     while (!$this->isToken($openClose[1])) {
       $arrayItem = $this->parseArrayItem();
-      if ($arrayItem->key === NULL) {
-        $arrayItem->key = $num++;
+      if ($arrayItem->getKey() === NULL) {
+        $arrayItem->setKey($num++);
       }
       $result[] = $arrayItem;
       $this->skipWhitespace();

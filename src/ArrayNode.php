@@ -41,7 +41,7 @@ class ArrayNode extends BaseNode implements \ArrayAccess, \IteratorAggregate, \C
 
   public function getItem($key): ?ArrayItemNode {
     foreach ($this->items as $arrayItem) {
-      if ($arrayItem->key == $key) {
+      if ($arrayItem->getKey() == $key) {
         return $arrayItem;
       }
     }
@@ -50,7 +50,7 @@ class ArrayNode extends BaseNode implements \ArrayAccess, \IteratorAggregate, \C
 
   public function getItemPosition($key) {
     foreach ($this->items as $arrayItem) {
-      if ($arrayItem->key == $key) {
+      if ($arrayItem->getKey() == $key) {
         return $arrayItem;
       }
     }
@@ -72,7 +72,7 @@ class ArrayNode extends BaseNode implements \ArrayAccess, \IteratorAggregate, \C
   #[\ReturnTypeWillChange]
   public function offsetGet($offset) {
     $item = $this->getItem($offset);
-    return $item ? $item->value : NULL;
+    return $item ? $item->getValue() : NULL;
   }
 
   public function offsetSet($offset, $value): void {

@@ -54,7 +54,7 @@ class Printer {
     elseif ($node instanceof ArrayNode) {
       $isSeq = array_column($node->getItems(), 'key') === range(0, count($node->getItems()) - 1);
       $isShort = array_reduce($node->getItems(), function ($carry, $item) {
-        return $carry && ($item->value instanceof ScalarNode) && empty($item->value->getOuterComments()) && strlen($item->value->getScalar()) < 15;
+        return $carry && ($item->getValue() instanceof ScalarNode) && empty($item->getValue()->getOuterComments()) && strlen($item->getValue()->getScalar()) < 15;
       }, count($node->getItems()) < 5);
 
       $parts = [];
@@ -62,16 +62,16 @@ class Printer {
       $childIndent = str_repeat(' ', (1 + $indent) * 2);
       foreach ($node->getItems() as $item) {
         $part = '';
-        if ($item->value->getOuterComments()) {
-          $part .= $item->value->renderComments($childIndent);
+        if ($item->getValue()->getOuterComments()) {
+          $part .= $item->getValue()->renderComments($childIndent);
         }
         if (!($isSeq && $isShort)) {
           $part .= $childIndent;
         }
         if (!$isSeq) {
-          $part .= (var_export($item->key, TRUE) . ' => ');
+          $part .= (var_export($item->getKey(), TRUE) . ' => ');
         }
-        $part .= $this->printNode($item->value, 1 + $indent);
+        $part .= $this->printNode($item->getValue(), 1 + $indent);
         $parts[] = $part;
       }
 
