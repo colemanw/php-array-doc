@@ -53,6 +53,10 @@ class NewDocumentTest extends \PHPUnit\Framework\TestCase {
         'bold' => TRUE,
       ],
       'details' => [
+        'zero' => 0,
+        'one' => 1,
+        'true' => TRUE,
+        'false' => FALSE,
         'alskjdf asdf' => 123,
       ],
     ];

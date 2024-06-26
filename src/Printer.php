@@ -47,8 +47,10 @@ class Printer {
     }
 
     if ($node instanceof ScalarNode) {
-      $constants = [FALSE => 'FALSE', TRUE => 'TRUE', NULL => 'NULL'];
-      $value = $constants[$node->getScalar()] ?? var_export($node->getScalar(), TRUE);
+      $value = var_export($node->getScalar(), TRUE);
+      if (in_array($value, ['false', 'true', 'null'])) {
+        $value = strtoupper($value);
+      }
       return $prefix . $value . $suffix;
     }
     elseif ($node instanceof ArrayNode) {
