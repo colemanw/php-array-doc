@@ -166,10 +166,11 @@ class Parser {
     }
     $this->skipWhitespace();
 
-    $item = new ArrayItemNode($key, $value);
     if (!empty($comments)) {
-      $item->comment = implode("", $comments);
+      $value->comment = implode("", $comments);
     }
+
+    $item = new ArrayItemNode($key, $value);
     return $item;
   }
 
@@ -309,7 +310,7 @@ class Parser {
       $comment = ltrim($this->currentToken[1], ' \t');
       $this->nextToken();
       if ($this->isToken(T_WHITESPACE)) {
-        $comment .= $this->currentToken[1];
+        $comment .= rtrim($this->currentToken[1], " ");
         $this->nextToken();
       }
       $comments[] = $comment;

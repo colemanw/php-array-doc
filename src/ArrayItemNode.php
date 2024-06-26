@@ -3,11 +3,6 @@ namespace PhpArrayDocument;
 
 class ArrayItemNode extends BaseNode {
 
-  /**
-   * @var string|null
-   */
-  public $comment = NULL;
-
   public $key;
 
   /**

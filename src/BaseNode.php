@@ -17,6 +17,11 @@ abstract class BaseNode {
   public $deferred = FALSE;
 
   /**
+   * @var string|null
+   */
+  public $comment = NULL;
+
+  /**
    * @template T of BaseNode
    * @param class-string<T> $type
    * @return Generator<T>
