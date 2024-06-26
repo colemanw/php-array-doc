@@ -63,8 +63,7 @@ class Printer {
       foreach ($node->items as $item) {
         $part = '';
         if ($item->value->comment) {
-          $part .= $childIndent;
-          $part .= rtrim(str_replace("\n", "\n$childIndent", $item->value->comment), " ");
+          $part .= $item->value->getRawComment($childIndent);
         }
         if (!($isSeq && $isShort)) {
           $part .= $childIndent;

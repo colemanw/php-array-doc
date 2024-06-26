@@ -17,7 +17,7 @@ abstract class BaseNode {
   public $deferred = FALSE;
 
   /**
-   * @var string|null
+   * @var array
    */
   public $comment = NULL;
 
@@ -30,6 +30,76 @@ abstract class BaseNode {
     if ($type === NULL || $this instanceof $type) {
       yield $this;
     }
+  }
+
+  /**
+   * Get a clean version of the comment, without any comment-markers.
+   *
+   * @return string|null
+   */
+  public function getCleanComment(): ?string {
+    if ($this->comment === NULL || $this->comment === []) {
+      return NULL;
+    }
+
+    $buf = '';
+    foreach ($this->comment as $comment) {
+      $comment = trim($comment);
+      if (substr($comment, 0, 2) === '//') {
+        $buf .= trim(substr($comment, 2)) . "\n";
+      }
+      elseif (substr($comment, 0, 3) === '/**') {
+        $lines = explode("\n", trim(substr($comment, 3, -2)));
+        $lines = preg_replace('/^\s*\* ?/', '', $lines);
+        $buf .= implode("\n", $lines) . "\n";
+      }
+      elseif (substr($comment, 0, 2) === '/*') {
+        $buf .= trim(substr($comment, 2, -2)) . "\n";
+      }
+      elseif ($comment === '') {
+        // ignore
+      }
+      else {
+        throw new \LogicException("Malformed comment");
+      }
+    }
+
+    return $buf;
+  }
+
+  /**
+   * Get the raw comment code, including the comment markers.
+   *
+   * @param string $prefix
+   * @return string|null
+   */
+  public function getRawComment(string $prefix = ''): ?string {
+    if ($this->comment === NULL || $this->comment === []) {
+      return NULL;
+    }
+
+    $buf = '';
+    foreach ($this->comment as $comment) {
+      if (substr($comment, 0, 2) === '//') {
+        $buf .= $prefix . $comment;
+      }
+      elseif (substr($comment, 0, 3) === '/**') {
+        // $buf .= $prefix . $comment;
+        $myIndent = substr($prefix, 2);
+        $buf .= $prefix . rtrim(str_replace("\n", "\n$myIndent", $comment), " ");
+      }
+      elseif (substr($comment, 0, 2) === '/*') {
+        $buf .= $prefix . $comment;
+      }
+      elseif ($comment === '') {
+        // ignore
+      }
+      else {
+        throw new \LogicException("Malformed comment");
+      }
+    }
+
+    return $buf;
   }
 
 }

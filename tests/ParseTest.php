@@ -23,19 +23,21 @@ class ParseTest extends \PHPUnit\Framework\TestCase {
     $this->assertEquals("/" . '* Lots of content *' . "/\n", $document->dataComments[2]);
 
     $this->assertArrayNode($document->root, FALSE, 'SettingsDefinition::create');
-    $this->assertScalarNode($document->root['name'], 'hello', FALSE, NULL, "/* The name is important */\n");
-    $this->assertScalarNode($document->root['label'], 'Hello World!', FALSE, 'E::ts', "// The label is shown to somebody\n");
+    $this->assertScalarNode($document->root['name'], 'hello', FALSE, NULL, "The name is important\n");
+    $this->assertScalarNode($document->root['label'], 'Hello World!', FALSE, 'E::ts', "The label is shown to somebody\n");
+    $this->assertScalarNode($document->root['active'], TRUE, FALSE, NULL, NULL);
+    $this->assertScalarNode($document->root['default'], 'ok', FALSE, NULL, "The default is something\nMade with one or two lines\nOr three.\n");
     $this->assertArrayNode($document->root['html'], FALSE, NULL);
-    $this->assertScalarNode($document->root['html']['bold'], TRUE, FALSE, NULL, "// To boldly go\n");
+    $this->assertScalarNode($document->root['html']['bold'], TRUE, FALSE, NULL, "To boldly go\nwhere no font face has gone before\n");
     $this->assertArrayNode($document->root['details'], TRUE, NULL);
   }
 
-  protected function assertScalarNode($node, $value, bool $deferred, ?string $factory, ?string $comment) {
+  protected function assertScalarNode($node, $value, bool $deferred, ?string $factory, ?string $cleanComment) {
     $this->assertInstanceOf(ScalarNode::class, $node);
     $this->assertEquals($value, $node->scalar);
     $this->assertEquals($deferred, $node->deferred);
     $this->assertEquals($factory, $node->factory);
-    $this->assertEquals($comment, $node->comment);
+    $this->assertEquals($cleanComment, $node->getCleanComment());
   }
 
   protected function assertArrayNode($node, bool $deferred, ?string $factory) {

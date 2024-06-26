@@ -11,8 +11,15 @@ return SettingsDefinition::create([
   // The label is shown to somebody
   'label' => E::ts('Hello World!'),
   'active' => TRUE,
+  /**
+   * The default is something
+   * Made with one or two lines
+   * Or three.
+   */
+  'default' => 'ok',
   'html' => [
     // To boldly go
+    // where no font face has gone before
     'bold' => TRUE,
   ],
   'details' => fn() => [

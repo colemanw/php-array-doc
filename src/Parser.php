@@ -167,7 +167,7 @@ class Parser {
     $this->skipWhitespace();
 
     if (!empty($comments)) {
-      $value->comment = implode("", $comments);
+      $value->comment = $comments;
     }
 
     $item = new ArrayItemNode($key, $value);
