@@ -54,7 +54,18 @@ class Printer {
       return $prefix . $value . $suffix;
     }
     elseif ($node instanceof ArrayNode) {
-      $isSeq = array_column($node->getItems(), 'key') === range(0, count($node->getItems()) - 1);
+      if (count($node->getItems()) <= 1) {
+        echo '';
+      }
+
+      $keys = array_map(
+        function ($i) {
+          return $i->getKey();
+        },
+        $node->getItems()
+      );
+
+      $isSeq = count($keys) === 0 || $keys === range(0, count($node->getItems()) - 1);
       $isShort = array_reduce($node->getItems(), function ($carry, $item) {
         return $carry && ($item->getValue() instanceof ScalarNode) && empty($item->getValue()->getOuterComments()) && strlen($item->getValue()->getScalar()) < 15;
       }, count($node->getItems()) < 5);

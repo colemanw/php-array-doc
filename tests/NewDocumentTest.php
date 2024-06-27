@@ -71,6 +71,15 @@ class NewDocumentTest extends \PHPUnit\Framework\TestCase {
         'int' => 123,
         'int-ish' => '123',
         'fun\\ny \'b"u`siness' => 'a\\b\'c"d`e',
+        'array-empty' => [],
+        'array-short-seq' => [3, 2, 1],
+        'array-shorter-seq' => [3],
+        'array-long-seq' => [
+          '123456789 123456789 123456789 123456789 123456789 123456789 ',
+        ],
+        'array-kv' => [
+          'k' => 'v',
+        ],
       ],
     ];
 
