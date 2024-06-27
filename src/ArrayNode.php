@@ -29,13 +29,20 @@ class ArrayNode extends BaseNode implements \ArrayAccess, \IteratorAggregate, \C
    * Take a basic data-array. Load it into the document.
    *
    * @param array $data
-   *   Simple array-tree. This does not have any comments, deferrals, factories, etc.
-   *   Just arrays and scalars.
+   *   Simple collection of arrays and scalars. They do not have any comments, deferrals, factories, etc.
+   *
+   *   Optionally, if $allowNodes is enabled, then you may mix-in specific instances of
+   *   `ScalarNode` or `ArrayNode` with additional metadata.
+   * @param bool $allowNodes
+   *   If TRUE, then any raw instances of {Base,Scalar,Array}Node may be imported directly.
    * @return $this
    */
-  public function importData(array $data): ArrayNode {
+  public function importData(array $data, bool $allowNodes = TRUE): ArrayNode {
     foreach ($data as $key => $value) {
-      if (is_array($value)) {
+      if ($allowNodes && $value instanceof BaseNode) {
+        $this[$key] = $value;
+      }
+      elseif (is_array($value)) {
         if (!isset($this[$key])) {
           $this[$key] = ArrayNode::create();
         }

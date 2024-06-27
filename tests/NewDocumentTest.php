@@ -42,7 +42,7 @@ class NewDocumentTest extends \PHPUnit\Framework\TestCase {
     $this->assertEquals($expected, $actual);
   }
 
-  public function testCreateMergeData() {
+  public function testCreateImportData() {
     $example = version_compare(PHP_VERSION, '7.4', '<') ? 'simple-array-7.3.php' : 'simple-array-7.4.php';
 
     $basicData = [
@@ -92,6 +92,55 @@ class NewDocumentTest extends \PHPUnit\Framework\TestCase {
     $file = dirname(__DIR__) . '/examples/' . $example;
     $expected = file_get_contents($file);
     $this->assertEquals($expected, $actual);
+  }
+
+  public function testCreateImportDataWithNodes() {
+    $example = version_compare(PHP_VERSION, '7.4', '<') ? 'simple-array-7.3.php' : 'simple-array-7.4.php';
+
+    $basicData = [
+      'id' => 123,
+      'name' => 'hello',
+      'options' => [4, 5],
+      'label' => ScalarNode::create('Hello World!')->setFactory('E::ts')->setInnerComments("This and\nthat!\n"),
+      'details' => ArrayNode::create()
+        ->setInnerComments('Advanced stuff')
+        ->importData([
+          'key' => 'value',
+        ]),
+    ];
+
+    $doc = PhpArrayDocument::create();
+    $doc->getRoot()->importData($basicData);
+
+    $expectExport = [
+      'id' => 123,
+      'name' => 'hello',
+      'options' => [4, 5],
+      'label' => 'Hello World!',
+      'details' => [
+        'key' => 'value',
+      ],
+    ];
+    $this->assertEquals($expectExport, $doc->getRoot()->exportData());
+
+    $expectString = '<' . "?php\nreturn [\n"
+      . "  'id' => 123,\n"
+      . "  'name' => 'hello',\n"
+      . "  'options' => [4, 5],\n"
+      . "  /**\n"
+      . "   * This and\n"
+      . "   * that!\n"
+      . "   */\n"
+      . "  'label' => E::ts('Hello World!'),\n"
+      . "  /**\n"
+      . "   * Advanced stuff\n"
+      . "   */\n"
+      . "  'details' => [\n"
+      . "    'key' => 'value',\n"
+      . "  ],\n"
+      . "];\n";
+    $actualString = (new Printer())->print($doc);
+    $this->assertEquals($expectString, $actualString);
   }
 
 }
