@@ -113,8 +113,6 @@ class NewDocumentTest extends \PHPUnit\Framework\TestCase {
   }
 
   public function testCreateImportDataWithNodes() {
-    $example = version_compare(PHP_VERSION, '7.4', '<') ? 'simple-array-7.3.php' : 'simple-array-7.4.php';
-
     $basicData = [
       'id' => 123,
       'name' => 'hello',
