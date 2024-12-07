@@ -22,7 +22,9 @@ return SettingsDefinition::create([
     // where no font face has gone before
     'bold' => TRUE,
   ],
-  'details' => function() { return [
-    'alskjdf asdf' => 123,
-  ]; },
+  'details' => function() {
+    return [
+      'alskjdf asdf' => 123,
+    ];
+  },
 ]);
