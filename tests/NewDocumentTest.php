@@ -141,7 +141,7 @@ class NewDocumentTest extends \PHPUnit\Framework\TestCase {
     ];
     $this->assertEquals($expectExport, $doc->getRoot()->exportData());
 
-    $expectString = '<' . "?php\nreturn [\n"
+    $expectString = '<' . "?php\n\nreturn [\n"
       . "  'id' => 123,\n"
       . "  'name' => 'hello',\n"
       . "  'options' => [4, 5],\n"
