@@ -94,6 +94,24 @@ class NewDocumentTest extends \PHPUnit\Framework\TestCase {
     $this->assertEquals($expected, $actual);
   }
 
+  public function testCreateUseWithoutComment() {
+    $example = 'use-without-comments.php';
+
+    $basicData = [
+      'foo' => ScalarNode::create('bar')->setFactory('SomeClass::create'),
+    ];
+
+    $doc = PhpArrayDocument::create();
+    $doc->addUse('SomeClass');
+    $doc->getRoot()->importData($basicData);
+
+    $printer = new Printer();
+    $actual = $printer->print($doc);
+    $file = dirname(__DIR__) . '/examples/' . $example;
+    $expected = file_get_contents($file);
+    $this->assertEquals($expected, $actual);
+  }
+
   public function testCreateImportDataWithNodes() {
     $example = version_compare(PHP_VERSION, '7.4', '<') ? 'simple-array-7.3.php' : 'simple-array-7.4.php';
 
@@ -123,7 +141,7 @@ class NewDocumentTest extends \PHPUnit\Framework\TestCase {
     ];
     $this->assertEquals($expectExport, $doc->getRoot()->exportData());
 
-    $expectString = '<' . "?php\nreturn [\n"
+    $expectString = '<' . "?php\n\nreturn [\n"
       . "  'id' => 123,\n"
       . "  'name' => 'hello',\n"
       . "  'options' => [4, 5],\n"

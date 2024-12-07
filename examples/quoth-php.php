@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Many ways to say the same thing.
  */

@@ -22,8 +22,8 @@ class Printer {
         $buf[] = sprintf('use %s as %s;', $class, $alias);
       }
     }
+    $buf[] = '';
     if ($document->getOuterComments()) {
-      $buf[] = '';
       $buf[] = rtrim(implode("", $document->getOuterComments()), "\n");
     }
     $buf[] = 'return ' . $this->printNode($document->getRoot()) . ";\n";

@@ -45,7 +45,7 @@ class ReadWriteTest extends \PHPUnit\Framework\TestCase {
 
   public function testPreferSingleQuotes() {
     $input = '<' . '?php return ["ab cd"];';
-    $expect = '<' . "?php\nreturn ['ab cd'];\n";
+    $expect = '<' . "?php\n\nreturn ['ab cd'];\n";
     $doc = (new Parser())->parse($input);
     $output = (new Printer())->print($doc);
     $this->assertEquals($expect, $output);
