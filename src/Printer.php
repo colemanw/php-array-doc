@@ -38,8 +38,10 @@ class Printer {
     }
     if ($node->isDeferred()) {
       if ($this->useFn) {
-        $prefix .= 'function() { return ';
-        $suffix = "; }" . $suffix;
+        $prefix .= "function() {\n";
+        $prefix .= str_repeat(' ', $indent * 2) . "  return ";
+        $suffix = ";\n" . str_repeat(' ', $indent * 2) . "}" . $suffix;
+        $indent++;
       }
       else {
         $prefix .= 'fn() => ';

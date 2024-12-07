@@ -15,7 +15,7 @@ return [
     'double-tick' => "`",
   ],
   'slashes' => [
-    'single-back-back' =>  '\\',
+    'single-back-back' => '\\',
     'double-back-back' => "\\",
   ],
   'lines' => [
