@@ -1,13 +1,27 @@
 # PhpArrayDocument
 
-This is a parser/printer for a subset of PHP focused on data. A document
-looks like:
+This is a parser/printer for a subset of PHP focused on data. (*It serves a role similar to a full-service YAML library - except with `*.php` data-files.*) Key features:
+
+* Allows `array` values and `scalar` values (`string`, `int`, `bool`, etc).
+* Allows comments for the overall document and for individual items in the tree.
+* Allows *tagged-values* (a.k.a. *factory-functions*) which look like *global or static method-calls*.
+* Allows deferred construction (`fn() => [...data...]`)
+* Prohibits objects, loops, math, concatenation, includes, custom functions, etc.
+
+## Examples: Data documents
+
+A basic document looks like this:
 
 ```php
 <?php
 return [
+  // First item is a string.
   'key_1' => 'value_1',
+
+  // Second item is an array of floats.
   'key_2' => [2.1, 2.2, 2.3],
+
+  // Third item is an array.
   'key_3' => [
     'part_a' => 'Apple',
     'part_b' => 'Banana',
@@ -15,33 +29,128 @@ return [
 ];
 ```
 
-Additionally, you may declare tagged/factory values:
+This next example is similar, but it adds a "tagged value" or "factory function" called `MyHelper::translate()`:
 
 ```php
 <?php
 use MyHelper as H;
+
 return [
+  'id' => 1234,
   'name' => 'greeter',
   'label' => H::translate('Hello World'),
 ];
 ```
 
-Or even:
+Note that `H::translate('Hello world')` takes _exactly one parameter_. It only supports a subset of PHP function-calls -- i.e. with one parameter; with global-function or static-method. (`H::translate` is less like an open-ended *function-call* and more like a *tag* that describes `Hello world`.)
+
+<!--
+
+> If you were writing similar document with XML/DOM, it  might look like:
+>
+> ```xml
+> <document xmlns:h="MyHelper">
+>   <array>
+>     <array-item>
+>       <key>name</key>
+>       <value>greeter</value>
+>     </array-item>
+>     <array-item>
+>       <key>label</key>
+>       <value h:translate>Hello World</value>
+>     </array-item>
+>   </array>
+> </document>
+> ```
+
+-->
+
+The same concept can be applied to generate objects/records, as long as there is _exactly one parameter_:
 
 ```php
 use MyHelper as H;
+
 return H::record([
+  'id' => 1234,
   'name' => 'greeter',
   'label' => H::translate('Hello World'),
 ]);
 ```
 
-`PhpArrayDocument` is a compatible subset of PHP, with these considerations:
+Value resolution may be defererd, as in:
 
-* Allows `array` values and `scalar` values (`string`, `int`, `bool`, etc).
-* Allows *tagged-values* or *factory-functions* which look like *global or static method-calls*.
-* Allows deferred construction (`fn() => [...data...]`)
-* Prohibits objects, loops, math, concatenation, includes, custom functions, etc.
+```php
+use MyHelper as H;
+
+return H::record([
+  'id' => 1234,
+  'name' => 'greeter',
+  'label' => fn() => H::translate('Hello World'),
+]);
+```
+
+## Examples: File manipulation
+
+Generate a new `*.php` data file. Populate it with `importData($array)`:
+
+```php
+$doc = PhpArrayDocument::create();
+$doc->getRoot()->importData([
+  'id' => 1234,
+  'name' => 'greeting',
+  'label' => ScalarNode::create('Hello World')->setFactory('E::ts'),
+]);
+
+$file = 'my.data.php';
+file_put_contents($file, (new Printer())->print($doc));
+```
+
+Read an existing file. Update individual items in the parse-tree. Save the updated file.
+
+```php
+$file = 'my.data.php';
+$doc = (new Parser())->parse(file_get_contents($file));
+
+$root = $doc->getRoot();
+$root['id'] = ScalarNode::create(100);
+$root['name'] = ScalarNode::create('greeting');
+$root['label'] = ScalarNode::create('Hello World')->setFactory('E::ts');
+
+file_put_contents($file, (new Printer())->print($doc));
+```
+
+Update an existing file. Do a global search (`walkNodes()`). Find references to `OldHelper::method` and replace them with `NewHelper::method`.
+
+```php
+$file = 'my.data.php';
+$doc = (new Parser())->parse(file_get_contents($file));
+
+foreach ($doc->getRoot()->walkNodes() as $node) {
+  if ($node->getFactory() === 'OldHelper::method') {
+    $node->setFactory('NewHelper::method');
+  }
+}
+
+file_put_contents($file, (new Printer())->print($doc));
+```
+
+## Cheatsheet
+
+Some commands to help with debugging:
+
+```bash
+## Tokenize an improvised PHP snippet
+echo '<?php return [1,2,3];' | ./scripts/tokenize.php
+
+## Tokenize a PHP file
+cat examples/simple-array-7.4.php | ./scripts/tokenize.php | less
+
+## Parse an improvised PHP snippet
+echo '<?php return [1,2,3];' | ./scripts/parse.php
+
+## Parse a PHP file
+cat examples/simple-array-7.4.php | ./scripts/parse.php | less
+```
 
 ## Model
 
@@ -65,56 +174,3 @@ return H::record([
     * Functionality-Focused Classes
         * `Parser`: Take a raw `string`. Generate a `PhpArrayDocument`.
         * `Printer`: Take a `PhpArrayDocument`. Generate a string
-
-## Examples
-
-```php
-# Generate a file from basic array data
-use PhpArrayDocument\PhpArrayDocument;
-$doc = PhpArrayDocument::create();
-$doc->getRoot()->importData([
-  'foo...',
-  'bar...',
-]);
-file_put_contents($file, (new Printer())->print($doc));
-```
-
-```php
-# Update a file
-use PhpArrayDocument\Parser;
-$file = 'my-example.data.php';
-$doc = (new Parser())->parse(file_get_contents($file));
-
-$doc->root['label'] = ScalarNode::create('Hello World')
-	->setFactory('E::ts');
-
-file_put_contents($file, (new Printer())->print($doc));
-```
-
-```php
-# Rename a factory method
-$doc = (new Parser())->parse(file_get_contents($file));
-foreach ($doc->root->walkNodes() as $node) {
-  if ($node->getFactory() === 'OldHelper::method') {
-    $node->setFactory('NewHelper::method');
-  }
-} 
-```
-
-## Cheatsheet
-
-Some commands to help with debugging:
-
-```bash
-## Parse a PHP file
-cat examples/simple-array.php | ./scripts/parse.php | less
-
-## Parse an improvised PHP snippet
-echo '<?php return [1,2,3];' | ./scripts/parse.php
-
-## Tokenize a PHP file
-cat examples/simple-array.php | ./scripts/tokenize.php | less
-
-## Tokenize an improvised PHP snippet
-echo '<?php return [1,2,3];' | ./scripts/tokenize.php
-```
