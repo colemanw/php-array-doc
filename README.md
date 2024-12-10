@@ -139,14 +139,21 @@ file_put_contents($file, (new Printer())->print($doc));
 Some commands to help with debugging:
 
 ```bash
+## Parse and re-print an improvised PHP snippet
+echo '<?php return [1,2,3];' | ./scripts/reprint.php
+
 ## Tokenize an improvised PHP snippet
 echo '<?php return [1,2,3];' | ./scripts/tokenize.php
 
-## Tokenize a PHP file
-cat examples/simple-array-7.4.php | ./scripts/tokenize.php | less
-
 ## Parse an improvised PHP snippet
 echo '<?php return [1,2,3];' | ./scripts/parse.php
+```
+```bash
+## Parse and re-print a PHP file
+cat examples/simple-array-7.4.php | ./scripts/reprint.php | less
+
+## Tokenize a PHP file
+cat examples/simple-array-7.4.php | ./scripts/tokenize.php | less
 
 ## Parse a PHP file
 cat examples/simple-array-7.4.php | ./scripts/parse.php | less
